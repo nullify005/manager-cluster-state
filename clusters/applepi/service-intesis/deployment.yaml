@@ -3,18 +3,17 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    kubernetes.io/metadata.name: exporter-weather-development-v1
-  name: exporter-weather-development-v1
+    kubernetes.io/metadata.name: service-intesis-development-v1
+  name: service-intesis-development-v1
 ---
-# Source: exporter-weather/templates/deployment.yaml
+# Source: service-intesis/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-exporter-weather
-  namespace: exporter-weather-development-v1
+  name: app-service-intesis
   labels:
-    helm.sh/chart: exporter-weather-0.1.0
-    app.kubernetes.io/name: exporter-weather
+    helm.sh/chart: service-intesis-0.1.0
+    app.kubernetes.io/name: service-intesis
     app.kubernetes.io/instance: app
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
@@ -22,7 +21,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: exporter-weather
+      app.kubernetes.io/name: service-intesis
       app.kubernetes.io/instance: app
   template:
     metadata:
@@ -31,14 +30,21 @@ spec:
         prometheus.io/port: "2112"
         prometheus.io/scrape: "true"
       labels:
-        app.kubernetes.io/name: exporter-weather
+        app.kubernetes.io/name: service-intesis
         app.kubernetes.io/instance: app
     spec:
       serviceAccountName: default
       securityContext:
         {}
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secrets
+          items:
+          - key: creds.yaml
+            path: creds.yaml
       containers:
-        - name: exporter-weather
+        - name: service-intesis
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -50,17 +56,22 @@ spec:
             runAsUser: 10001
             seccompProfile:
               type: RuntimeDefault
-          image: "ghcr.io/nullify005/exporter-weather:v0.1.1" # {"$imagepolicy": "flux-system:exporter-weather"}
+          image: "ghcr.io/nullify005/service-intesis:v0.1.0" # {"$imagepolicy": "flux-system:exporter-weather"}
           imagePullPolicy: IfNotPresent
           command:
-            - "/exporter-weather"
+            - "/service-intesis"
           args:
             - "watch"
-            - "r3fup88"
-            - "--interval"
-            - "2m"
+            - "127934703953"
             - "--listen"
             - ":2112"
+            - "--interval"
+            - "120s"
+            - "--secrets"
+            - "/.secrets/creds.yaml"
+          volumeMounts:
+          - name: secrets
+            mountPath: /.secrets
           livenessProbe:
             httpGet:
               path: /health
