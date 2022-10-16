@@ -7,9 +7,9 @@ metadata:
 spec:
   imageRepositoryRef:
     name: exporter-weather
+  filterTags:
+    pattern: '^v(?P<release>.*)'
+    extract: '$release'
   policy:
-    filterTags:
-      pattern: '^v(?P<release>.*)'
-      extract: '$release'
     semver:
       range: '>=v0.1.0'
