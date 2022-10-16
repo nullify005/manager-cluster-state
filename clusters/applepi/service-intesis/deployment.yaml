@@ -57,7 +57,7 @@ spec:
             runAsUser: 10001
             seccompProfile:
               type: RuntimeDefault
-          image: "ghcr.io/nullify005/service-intesis:v0.1.0" # {"$imagepolicy": "flux-system:exporter-weather"}
+          image: "ghcr.io/nullify005/service-intesis:v0.1.0" # {"$imagepolicy": "flux-system:service-intesis"}
           imagePullPolicy: IfNotPresent
           command:
             - "/service-intesis"
