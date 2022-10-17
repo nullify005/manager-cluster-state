@@ -50,7 +50,7 @@ spec:
             runAsUser: 10001
             seccompProfile:
               type: RuntimeDefault
-          image: "ghcr.io/nullify005/exporter-weather:v0.1.1" # {"$imagepolicy": "flux-system:exporter-weather"}
+          image: ghcr.io/nullify005/exporter-weather:v0.1.1 # {"$imagepolicy": "flux-system:exporter-weather"}
           imagePullPolicy: IfNotPresent
           command:
             - "/exporter-weather"
