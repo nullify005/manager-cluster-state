@@ -12,4 +12,4 @@ spec:
     extract: '$release'
   policy:
     semver:
-      range: '>=v0.1.0'
+      range: '>=v0.1.7'

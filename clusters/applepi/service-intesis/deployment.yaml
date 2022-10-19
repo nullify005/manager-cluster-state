@@ -5,6 +5,29 @@ metadata:
     kubernetes.io/metadata.name: service-intesis-development-v1
   name: service-intesis-development-v1
 ---
+# Source: service-intesis/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-intesis
+  namespace: service-intesis-development-v1
+  labels:
+    helm.sh/chart: service-intesis-0.1.0
+    app.kubernetes.io/name: service-intesis
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 2112
+      targetPort: 2112
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: service-intesis
+    app.kubernetes.io/instance: app
+---
 # Source: service-intesis/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -34,53 +57,74 @@ spec:
         app.kubernetes.io/instance: app
     spec:
       serviceAccountName: default
-      securityContext: {}
-      volumes:
-      - name: secrets
-        secret:
-          secretName: secrets
-          items:
-          - key: creds.yaml
-            path: creds.yaml
+      securityContext:
+        {}
       containers:
-      - name: service-intesis
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 10001
-          runAsNonRoot: true
-          runAsUser: 10001
-          seccompProfile:
-            type: RuntimeDefault
-        image: ghcr.io/nullify005/service-intesis:v0.1.4 # {"$imagepolicy": "flux-system:service-intesis"}
-        imagePullPolicy: IfNotPresent
-        command:
-        - "/service-intesis"
-        args:
-        - "watch"
-        - "127934703953"
-        - "--listen"
-        - ":2112"
-        - "--interval"
-        - "120s"
-        - "--secrets"
-        - "/.secrets/creds.yaml"
-        volumeMounts:
-        - name: secrets
-          mountPath: /.secrets
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 2112
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 2112
-        resources:
-          limits:
-            memory: 32Mi
-          requests:
-            memory: 32Mi
+        - name: service-intesis
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          image: ghcr.io/nullify005/service-intesis:v0.1.7 # {"$imagepolicy": "flux-system:service-intesis"}
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/service-intesis"
+          args:
+            - "watch"
+            - "127934703953"
+            - "--listen"
+            - ":2112"
+            - "--interval"
+            - "120s"
+            - "--secrets"
+            - "/.secrets/creds.yaml"
+          ports:
+            - name: http
+              containerPort: 2112
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 2112
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 2112
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              memory: 32Mi
+---
+# Source: service-intesis/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "app-service-intesis-test-connection"
+  namespace: service-intesis-development-v1
+  labels:
+    helm.sh/chart: service-intesis-0.1.0
+    app.kubernetes.io/name: service-intesis
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['app-service-intesis:2112']
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+  restartPolicy: Never
+
