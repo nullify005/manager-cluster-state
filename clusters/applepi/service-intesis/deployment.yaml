@@ -59,6 +59,13 @@ spec:
       serviceAccountName: default
       securityContext:
         {}
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secrets
+          items:
+          - key: creds.yaml
+            path: creds.yaml
       containers:
         - name: service-intesis
           securityContext:
@@ -85,6 +92,9 @@ spec:
             - "120s"
             - "--secrets"
             - "/.secrets/creds.yaml"
+          volumeMounts:
+          - name: secrets
+            mountPath: /.secrets
           ports:
             - name: http
               containerPort: 2112
