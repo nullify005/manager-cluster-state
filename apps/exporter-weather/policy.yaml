@@ -1,0 +1,15 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: exporter-weather
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: exporter-weather
+  filterTags:
+    pattern: '^v(?P<release>.*)'
+    extract: '$release'
+  policy:
+    semver:
+      range: '>=v0.1.0'

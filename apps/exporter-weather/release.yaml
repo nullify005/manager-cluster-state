@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: exporter-weather
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  chart:
+    spec:
+      chart: ./helm/charts/exporter-weather
+      sourceRef:
+        kind: GitRepository
+        name: exporter-weather
+        namespace: flux-system
+      valuesFiles:
+      - ./helm/charts/exporter-weather/values.yaml
+      - ./helm/values/app/common.yaml
+      - ./helm/values/app/development.yaml
+  targetNamespace: exporter-weather-v1
+  releaseName: exporter-weather
+  timeout: 2m0s
+  values:
+    image:
+      tag: v0.1.3 # {"$imagepolicy": "flux-system:exporter-weather:tag"}
