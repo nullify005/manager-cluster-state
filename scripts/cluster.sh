@@ -17,9 +17,7 @@ case ${1} in
         k3d cluster delete ${CLUSTER}
         ;;
     apply)
-        find ./clusters/local -name \*.yaml -exec kubectl apply -f {} \;
-        kustomize build ./infrastructure/ | kubectl apply -f -
-        kustomize build ./apps/ | kubectl apply -f -
+        kustomize build ./clusters/local | kubectl apply -f -
         ;;
     *)
         echo "no command specified, wanted (start|up|create|stop|down|delete)"

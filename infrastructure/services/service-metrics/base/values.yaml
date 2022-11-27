@@ -1,27 +1,10 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: v1
 metadata:
-  name: prometheus
+  name: service-metrics-v1-values-common
   namespace: flux-system
-spec:
-  chart:
-    spec:
-      chart: prometheus
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: HelmRepository
-        name: prometheus-community
-        namespace: flux-system
-      version: 15.18.0
-  install:
-    crds: Create
-  interval: 1h0s
-  upgrade:
-    crds: Create
-  targetNamespace: service-metrics-v1
-  releaseName: prometheus
-  timeout: 2m0s
-  values:
+kind: ConfigMap
+data:
+  values.yaml: |
     alertmanager:
       enabled: false
     kubeStateMetrics:
@@ -71,7 +54,7 @@ spec:
               - source_labels: [__param_target]
                 target_label: instance
               - target_label: __address__
-                replacement: snmp-exporter-prometheus-snmp-exporter.exporter-snmp-local-v1:9116
+                replacement: snmp-exporter-prometheus-snmp-exporter.exporter-snmp-v1:9116
           - job_name: 'vdsl'
             static_configs:
               - targets:
@@ -85,7 +68,7 @@ spec:
               - source_labels: [__param_target]
                 target_label: instance
               - target_label: __address__
-                replacement: snmp-exporter-prometheus-snmp-exporter.exporter-snmp-local-v1:9116
+                replacement: snmp-exporter-prometheus-snmp-exporter.exporter-snmp-v1:9116
           - job_name: 'kubernetes-service-endpoints'
             honor_labels: true
             kubernetes_sd_configs:
