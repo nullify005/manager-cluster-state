@@ -21,4 +21,4 @@ spec:
   timeout: 2m0s
   values:
     image:
-      tag: v0.1.3 # {"$imagepolicy": "flux-system:service-intesis:tag"}
+      tag: v0.2.2 # {"$imagepolicy": "flux-system:service-intesis:tag"}
