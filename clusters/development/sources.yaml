@@ -9,4 +9,4 @@ spec:
   secretRef:
     name: github-personal-access-token
   ref:
-    branch: main
+    branch: bug/fix-sealed-secret-deps
