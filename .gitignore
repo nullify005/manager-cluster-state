@@ -1,2 +1,2 @@
-/clusters/development/secret.yaml
+/clusters/*/secret.yaml
 /certs/private-sealed-secrets.yaml

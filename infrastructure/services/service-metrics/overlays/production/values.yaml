@@ -1,0 +1,11 @@
+apiVersion: v1
+metadata:
+  name: service-metrics-v1-values-production
+  namespace: flux-system
+kind: ConfigMap
+data:
+  values.yaml: |
+    server:
+      ingress:
+        hosts:
+        - prometheus.local

@@ -30,6 +30,13 @@ case ${1} in
             ;;
         esac
         ;;
+    secrets)
+        if [ ! -e ./clusters/${2}/secret.yaml ]; then
+            echo "missing secret at: .//clusters/${2}/secret.yaml"
+            exit 1
+        fi
+        kubectl apply -f ./clusters/${2}/secret.yaml
+        ;;
     *)
         echo "no command specified, wanted (start|up|create|stop|down|delete)"
         exit 1
