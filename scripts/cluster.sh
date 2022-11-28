@@ -32,7 +32,7 @@ case ${1} in
         ;;
     secrets)
         if [ ! -e ./clusters/${2}/secret.yaml ]; then
-            echo "missing secret at: .//clusters/${2}/secret.yaml"
+            echo "missing secret at: ./clusters/${2}/secret.yaml"
             exit 1
         fi
         kubectl apply -f ./clusters/${2}/secret.yaml
