@@ -9,4 +9,4 @@ spec:
   secretRef:
     name: github-personal-access-token
   ref:
-    branch: feat/expand-local-environment
+    branch: main

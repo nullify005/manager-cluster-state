@@ -2,6 +2,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
+  name: infrastructure-crds
+  namespace: flux-system
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: manager-cluster-state
+    namespace: flux-system
+  path: "./infrastructure/crds"
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
   name: infrastructure
   namespace: flux-system
 spec:
@@ -12,6 +26,9 @@ spec:
     namespace: flux-system
   path: "./infrastructure/environments/production"
   prune: true
+  dependsOn:
+  - name: infrastructure-crds
+    namespace: flux-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
