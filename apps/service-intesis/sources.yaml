@@ -1,0 +1,15 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: service-intesis
+  namespace: flux-system
+spec:
+  interval: 1h0s
+  url: https://github.com/nullify005/service-intesis
+  ref:
+    branch: main
+  ignore: |
+    # exclude everything
+    /*
+    # include the helm charts tho
+    !/helm/

@@ -1,0 +1,15 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: service-intesis
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: service-intesis
+  filterTags:
+    pattern: '^v(?P<release>.*)'
+    extract: '$release'
+  policy:
+    semver:
+      range: '>=v0.1.0'

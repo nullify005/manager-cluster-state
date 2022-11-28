@@ -17,7 +17,18 @@ case ${1} in
         k3d cluster delete ${CLUSTER}
         ;;
     apply)
-        kustomize build ./clusters/local | kubectl apply -f -
+        case ${2} in
+            development)
+                kubectl apply -f ./certs/private-sealed-secrets.yaml
+                kustomize build ./clusters/development | kubectl apply -f -
+            ;;
+            *)
+                kubectl apply -f ./certs/private-sealed-secrets.yaml
+                kustomize build ./clusters/local | kubectl apply -f -
+                kubectl wait -n flux-system helmrelease/sealed-secrets --for=condition=ready
+                kustomize build ./apps | kubectl apply -f -
+            ;;
+        esac
         ;;
     *)
         echo "no command specified, wanted (start|up|create|stop|down|delete)"

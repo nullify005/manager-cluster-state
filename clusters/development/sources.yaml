@@ -1,0 +1,12 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: manager-cluster-state
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/nullify005/manager-cluster-state
+  secretRef:
+    name: github-personal-access-token
+  ref:
+    branch: feat/expand-local-environment
