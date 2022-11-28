@@ -20,7 +20,7 @@ spec:
     crds: Create
   targetNamespace: service-metrics-v1
   releaseName: prometheus
-  timeout: 2m0s
+  timeout: 10m0s
   valuesFrom:
   - kind: ConfigMap
     name: service-metrics-v1-values-common

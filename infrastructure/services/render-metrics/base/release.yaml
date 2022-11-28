@@ -22,7 +22,7 @@ spec:
   dependsOn:
   - name: prometheus
   releaseName: grafana
-  timeout: 2m0s
+  timeout: 10m0s
   values:
     ingress:
       enabled: true
