@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-external-mdns
+  namespace: service-mdns-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-mdns
+      app.kubernetes.io/instance: app
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+      labels:
+        app.kubernetes.io/name: external-mdns
+        app.kubernetes.io/instance: app
+    spec:
+      hostNetwork: true
+      serviceAccountName: app-external-mdns
+      securityContext:
+        {}
+      containers:
+        - name: external-mdns
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          image: "ghcr.io/logicfox/external-mdns:latest@sha256:097efc10563b707806a125a49a240ef09bc0b7258c09b048afa6455ec35d1f9d"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-source=ingress"
+            - "-source=service"
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              memory: 64Mi

@@ -51,3 +51,23 @@ sense as then you have to include the values for the chart itself for every rele
 * service-intesis
 * actually blat the pi's & replace them with this
 * fold the base system provisioning into it?
+
+## alternative idea
+
+working through the examples for environment customisation is making me annoyed at just
+how ugly it could be using kustomize as the method for overlay
+
+this is annoying because helm basically does this for us, we just need to use it better
+
+the only issue is that helm references need to be "in a repo of some kind" (which includes OCI)
+meaning that it's a PITA to reproduce the environment entirely locally without reference to an
+outside repo or having commits / branches etc.
+
+the option I'm considering is this:
+
+* within this repo flux ONLY ever points to helm releases ... except that we still need kustomization
+  overlay for values files etc. ...
+* then use helm to do all the heavy lifting, which feels a little more natural
+
+do some kind of generation, which tries to abstract away some of the flux bits until we gen the
+manifests at the end, which themselves are pushed into the repo ...
