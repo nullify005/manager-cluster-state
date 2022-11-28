@@ -31,11 +31,25 @@ case ${1} in
         esac
         ;;
     secrets)
+        set +e
+        kubectl create ns flux-system
+        set -e
         if [ ! -e ./clusters/${2}/secret.yaml ]; then
             echo "missing secret at: ./clusters/${2}/secret.yaml"
             exit 1
         fi
         kubectl apply -f ./clusters/${2}/secret.yaml
+        ;;
+    bootstrap)
+        if [ ! "${2}" ]; then
+            echo "missing environment name"
+            exit 1
+        fi
+        flux bootstrap github --owner=nullify005 --repository=manager-cluster-state --personal=true --path ./clusters/${2} 
+        ;;
+    blat)
+        flux uninstall
+        kubectl delete ns flux-system
         ;;
     *)
         echo "no command specified, wanted (start|up|create|stop|down|delete)"
