@@ -4,18 +4,17 @@
 
 set -ex
 
-VERSION="v1.25.3-k3s1-arm64"
+VERSION="v1.24.8-k3s1-arm64"
 CLUSTER="manager-cluster-state"
 
 function secrets {
     set +e
     kubectl create ns flux-system
     set -e
-    if [ ! -e ./clusters/${1}/secrets.yaml ]; then
-        echo "missing secret at: ./clusters/${1}/secrets.yaml"
-        exit 1
+    if [ -e ./clusters/${1}/secrets.yaml ]; then
+        kubectl apply -f ./clusters/${1}/secrets.yaml
     fi
-    kubectl apply -f ./clusters/${1}/secrets.yaml
+    kubectl apply -f ./certs/private-sealed-secrets.yaml
 }
 
 case ${1} in
@@ -28,15 +27,16 @@ case ${1} in
         k3d cluster delete ${CLUSTER}
         ;;
     apply)
-        case ${2} in
+        shift
+        secrets ${@}
+        case ${1} in
             development)
-                kubectl apply -f ./certs/private-sealed-secrets.yaml
                 kustomize build ./clusters/development | kubectl apply -f -
             ;;
             *)
-                kubectl apply -f ./certs/private-sealed-secrets.yaml
-                kustomize build ./clusters/local | kubectl apply -f -
+                kustomize build ./infrastructure/crds | kubectl apply -f -
                 kubectl wait -n flux-system helmrelease/sealed-secrets --for=condition=ready
+                kustomize build ./infrastructure/environments/local | kubectl apply -f -
                 kustomize build ./apps | kubectl apply -f -
             ;;
         esac
