@@ -15,12 +15,12 @@ spec:
         namespace: flux-system
   install:
     crds: Create
-  interval: 1h0s
+  interval: 30m
   upgrade:
     crds: Create
   targetNamespace: exporter-snmp-v1
   releaseName: snmp-exporter
-  timeout: 2m0s
+  timeout: 5m0s
   dependsOn:
   - name: prometheus
   valuesFrom:

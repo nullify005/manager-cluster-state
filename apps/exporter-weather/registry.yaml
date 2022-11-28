@@ -6,4 +6,4 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/nullify005/exporter-weather
-  interval: 5m0s
+  interval: 10m0s

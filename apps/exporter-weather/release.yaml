@@ -4,7 +4,7 @@ metadata:
   name: exporter-weather
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 10m0s
   chart:
     spec:
       chart: ./helm/charts/exporter-weather
