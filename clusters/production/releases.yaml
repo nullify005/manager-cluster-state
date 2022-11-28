@@ -10,7 +10,7 @@ spec:
     kind: GitRepository
     name: manager-cluster-state
     namespace: flux-system
-  path: "./infrastructure/environments/local"
+  path: "./infrastructure/environments/production"
   prune: true
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2

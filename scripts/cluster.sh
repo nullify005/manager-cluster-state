@@ -7,6 +7,17 @@ set -ex
 VERSION="v1.25.3-k3s1-arm64"
 CLUSTER="manager-cluster-state"
 
+function secrets {
+    set +e
+    kubectl create ns flux-system
+    set -e
+    if [ ! -e ./clusters/${1}/secrets.yaml ]; then
+        echo "missing secret at: ./clusters/${1}/secrets.yaml"
+        exit 1
+    fi
+    kubectl apply -f ./clusters/${1}/secrets.yaml
+}
+
 case ${1} in
     start|up|create)
         k3d cluster create ${CLUSTER} --image rancher/k3s:${VERSION} -p "80:80@loadbalancer" -p "443:443@loadbalancer" --agents 2
@@ -31,21 +42,14 @@ case ${1} in
         esac
         ;;
     secrets)
-        set +e
-        kubectl create ns flux-system
-        set -e
-        if [ ! -e ./clusters/${2}/secret.yaml ]; then
-            echo "missing secret at: ./clusters/${2}/secret.yaml"
-            exit 1
-        fi
-        kubectl apply -f ./clusters/${2}/secret.yaml
+        shift
+        secrets ${@}
         ;;
     bootstrap)
-        if [ ! "${2}" ]; then
-            echo "missing environment name"
-            exit 1
-        fi
-        flux bootstrap github --owner=nullify005 --repository=manager-cluster-state --personal=true --path ./clusters/${2} 
+        shift
+        secrets ${@}
+        flux bootstrap --components-extra="image-reflector-controller,image-automation-controller" \
+            github --owner=nullify005 --repository=manager-cluster-state --personal=true --path ./clusters/${1} --verbose
         ;;
     blat)
         flux uninstall
