@@ -11,7 +11,7 @@ spec:
         kind: HelmRepository
         name: sealed-secrets
       version: 2.7.1
-  interval: 1h0s
+  interval: 30m
   releaseName: sealed-secrets-controller
   targetNamespace: flux-system
   install:

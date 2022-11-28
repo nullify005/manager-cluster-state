@@ -4,7 +4,7 @@ metadata:
   name: exporter-weather
   namespace: flux-system
 spec:
-  interval: 1h0s
+  interval: 30m0s
   url: https://github.com/nullify005/exporter-weather
   ref:
     branch: main

@@ -4,7 +4,7 @@ metadata:
   name: manager-cluster-state
   namespace: flux-system
 spec:
-  interval: 5m
+  interval: 30m
   url: https://github.com/nullify005/manager-cluster-state
   secretRef:
     name: github-personal-access-token

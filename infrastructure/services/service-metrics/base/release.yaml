@@ -15,7 +15,7 @@ spec:
       version: 15.18.0
   install:
     crds: Create
-  interval: 1h0s
+  interval: 30m0s
   upgrade:
     crds: Create
   targetNamespace: service-metrics-v1
