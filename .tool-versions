@@ -4,4 +4,4 @@ kubectl 1.24.8
 kustomize 4.2.0
 kubeseal 0.19.2
 kubeconform 0.5.0
-flux2 0.37.0 Latest
+flux2 0.37.0
