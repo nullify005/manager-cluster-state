@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- ../../services/flux-notifications/overlays/production
 - ../../services/service-mdns/base
 - ../../services/service-metrics/overlays/production
 - ../../services/exporter-snmp/base
