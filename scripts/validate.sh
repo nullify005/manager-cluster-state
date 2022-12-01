@@ -37,6 +37,7 @@ CI_KUBECONFORM_REL="https://github.com/yannh/kubeconform/releases/download/v0.5.
 CI_KUBECONFORM_SHA="5b39700d0924072313ad7e898b6101ea0ebdd3634301b1176b25a8572e62190e"
 
 set -x
+set -o pipefail
 if [ ${CI} ]; then
     `which kubeconform`
     if [ $? -ne 0 ]; then
@@ -65,7 +66,8 @@ else
     echo "INFO - Using cached Flux OpenAPI schemas"
 fi
 
-set +ex
+set -e
+set +x
 find . -type f -name '*.yaml' -print0 | while IFS= read -r -d $'\0' file;
   do
     echo "INFO - Validating $file"
