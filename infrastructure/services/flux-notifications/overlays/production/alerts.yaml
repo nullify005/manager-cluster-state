@@ -1,17 +1,12 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert
 metadata:
-  name: slack
+  name: github
   namespace: flux-system
 spec:
-  summary: ":monkey: local development cluster"
   providerRef:
-    name: slack
+    name: github
   eventSeverity: info
   eventSources:
-    - kind: GitRepository
-      name: '*'
     - kind: Kustomization
-      name: '*'
-    - kind: HelmRelease
       name: '*'
