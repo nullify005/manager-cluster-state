@@ -4,7 +4,7 @@ metadata:
   name: alerts
   namespace: flux-system
 spec:
-  summary: "local development cluster"
+  summary: ":monkey: local development cluster"
   providerRef:
     name: slack
   eventSeverity: info
