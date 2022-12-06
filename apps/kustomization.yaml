@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
 - exporter-weather
 - service-intesis
+- chat-hvac
 - grafana-dashboards

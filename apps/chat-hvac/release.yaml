@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: chat-hvac
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  chart:
+    spec:
+      chart: ./helm/charts/chat-hvac
+      sourceRef:
+        kind: GitRepository
+        name: chat-hvac
+        namespace: flux-system
+      valuesFiles:
+      - ./helm/charts/chat-hvac/values.yaml
+  targetNamespace: chat-hvac-v1
+  releaseName: chat-hvac
+  timeout: 2m0s
+  dependsOn:
+  - name: service-intesis
+  values:
+    image:
+      tag: v0.1.0 # {"$imagepolicy": "flux-system:chat-hvac:tag"}
