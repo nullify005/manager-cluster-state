@@ -13,6 +13,13 @@ a experiment in gitops management of my HVAC controller applications deployed on
 
 ### locally with local filesystem as the reference
 
+```
+brew install yq
+brew install wget
+```
+
+`./scripts/bootstrap.sh` to init the asdf environment
+
 the following is for local context only which tries to avoid all things Git
 
 assumes docker-desktop is running for k3d
@@ -83,6 +90,26 @@ flux resume hr <release name>
 `./scripts/cluster.sh blat`
 
 which will uninstall flux & bin the namespace (don't forget to hunt down & kill any ClusterRole, ClusterRoleBinding, & PodSecurityPolicy objects which aren't ns scoped)
+
+## generating secrets
+
+1. ensure that you have the private key to be located in `./certs/priv-sealed-secrets.pem` & that this matches the public key
+2. get a local cluster up & running with the sealed secrets service operational in `kube-system`
+3. to turn any text into it's encrypted variant ...
+
+```
+echo -ne 'text' | base64 | kubeseal --raw --scope strict --name <the name> -n <the namespace>
+```
+
+which will spit out the encrypted variant which is signed with the public key & can be decrypted with the public key
+
+for blobs of text, don't forget to base64 the contents if it's meant to represent a file
+
+the alternative is to pass it a full Secrets object & then have it convert that to the encrypted version like so:
+
+```
+kubeseal -o yaml -f ./secrets/chat-hvac/config.yaml
+```
 
 ## notes
 
