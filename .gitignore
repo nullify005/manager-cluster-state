@@ -1,3 +1,4 @@
 /clusters/*/secrets.yaml
-/certs/private-sealed-secrets.yaml
+/certs/priv-sealed-secrets.pem
 /gen
+/secrets
